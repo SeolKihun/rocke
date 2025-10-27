@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>가위바위보 게임</title>
+    <!-- Tailwind CSS 로드 -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                    },
+                },
+            },
+        }
+    </script>
+</head>
+<body class="bg-gray-100 flex items-center justify-center min-h-screen font-sans">
+
+    <div class="bg-white p-8 rounded-lg shadow-lg w-full max-w-md text-center">
+        
+        <h1 class="text-3xl font-bold text-gray-800 mb-6">가위바위보!</h1>
+
+        <!-- 플레이어 선택 버튼 -->
+        <div class="flex justify-center space-x-4 mb-8">
+            <button id="rock" class="choice-btn bg-blue-500 hover:bg-blue-600 text-white font-bold py-3 px-6 rounded-lg text-xl transition duration-300 shadow-md">
+                바위 ✊
+            </button>
+            <button id="paper" class="choice-btn bg-green-500 hover:bg-green-600 text-white font-bold py-3 px-6 rounded-lg text-xl transition duration-300 shadow-md">
+                보 ✋
+            </button>
+            <button id="scissors" class="choice-btn bg-red-500 hover:bg-red-600 text-white font-bold py-3 px-6 rounded-lg text-xl transition duration-300 shadow-md">
+                가위 ✌️
+            </button>
+        </div>
+
+        <!-- 결과 표시 영역 -->
+        <div class="space-y-4">
+            <p class="text-lg">
+                <span class="font-semibold">나의 선택:</span>
+                <span id="player-choice" class="text-gray-700">...</span>
+            </p>
+            <p class="text-lg">
+                <span class="font-semibold">컴퓨터의 선택:</span>
+                <span id="computer-choice" class="text-gray-700">...</span>
+            </p>
+            <p id="result-text" class="text-2xl font-bold text-indigo-600 h-8">
+                <!-- 결과가 여기에 표시됩니다 -->
+            </p>
+        </div>
+
+    </div>
+
+    <script>
+        // DOM 요소 가져오기
+        const playerChoiceDisplay = document.getElementById('player-choice');
+        const computerChoiceDisplay = document.getElementById('computer-choice');
+        const resultText = document.getElementById('result-text');
+        
+        // 선택 버튼들에 이벤트 리스너 추가
+        const choiceButtons = document.querySelectorAll('.choice-btn');
+        const choices = ['rock', 'paper', 'scissors'];
+        const choiceEmojis = {
+            rock: '바위 ✊',
+            paper: '보 ✋',
+            scissors: '가위 ✌️'
+        };
+
+        choiceButtons.forEach(button => {
+            button.addEventListener('click', (e) => {
+                // 1. 플레이어 선택 가져오기
+                const playerChoice = e.target.id;
+                playerChoiceDisplay.textContent = choiceEmojis[playerChoice];
+
+                // 2. 컴퓨터 선택 생성하기
+                const computerChoice = getComputerChoice();
+                computerChoiceDisplay.textContent = choiceEmojis[computerChoice];
+
+                // 3. 결과 판정하기
+                const result = getResult(playerChoice, computerChoice);
+                resultText.textContent = result;
+                
+                // 결과에 따라 색상 변경 (선택 사항)
+                if (result === '이겼습니다! 🎉') {
+                    resultText.classList.remove('text-red-500', 'text-gray-500');
+                    resultText.classList.add('text-green-500');
+                } else if (result === '졌습니다... 😢') {
+                    resultText.classList.remove('text-green-500', 'text-gray-500');
+                    resultText.classList.add('text-red-500');
+                } else {
+                    resultText.classList.remove('text-green-500', 'text-red-500');
+                    resultText.classList.add('text-gray-500');
+                }
+            });
+        });
+
+        // 컴퓨터의 선택을 랜덤으로 생성하는 함수
+        function getComputerChoice() {
+            const randomIndex = Math.floor(Math.random() * choices.length);
+            return choices[randomIndex];
+        }
+
+        // 승패를 결정하는 함수
+        function getResult(player, computer) {
+            if (player === computer) {
+                return '비겼습니다! 😐';
+            }
+
+            if (
+                (player === 'rock' && computer === 'scissors') ||
+                (player === 'paper' && computer === 'rock') ||
+                (player === 'scissors' && computer === 'paper')
+            ) {
+                return '이겼습니다! 🎉';
+            } else {
+                return '졌습니다... 😢';
+            }
+        }
+    </script>
+
+</body>
+</html>
